@@ -27,24 +27,24 @@ class _LiveTvPlayerState extends State<LiveTvPlayer> {
   late RecentWatchedChannelsProvider _recentWatchedChannelsProvider;
   bool _hasError = false;
 
-  double _currentAspectRatio = 16 / 9;
-  final List<double> _aspectRatios = [
-    16 / 9, // Widescreen
-    4 / 3, // Standard
-    21 / 9, // Ultra-wide
-  ];
+  // double _currentAspectRatio = 16 / 9;
+  // final List<double> _aspectRatios = [
+  //   16 / 9, // Widescreen
+  //   4 / 3, // Standard
+  //   21 / 9, // Ultra-wide
+  // ];
 
-  final List<String> _aspectLabels = ['16:9', '4:3', '21:9'];
+  // final List<String> _aspectLabels = ['16:9', '4:3', '21:9'];
 
-  void _toggleAspectRatio() {
-    setState(() {
-      int currentIndex = _aspectRatios.indexOf(_currentAspectRatio);
-      int nextIndex = (currentIndex + 1) % _aspectRatios.length;
-      _currentAspectRatio = _aspectRatios[nextIndex];
-      _betterPlayerController.setControlsEnabled(true);
-      _betterPlayerController.setOverriddenAspectRatio(_currentAspectRatio);
-    });
-  }
+  // void _toggleAspectRatio() {
+  //   setState(() {
+  //     int currentIndex = _aspectRatios.indexOf(_currentAspectRatio);
+  //     int nextIndex = (currentIndex + 1) % _aspectRatios.length;
+  //     _currentAspectRatio = _aspectRatios[nextIndex];
+  //     _betterPlayerController.setControlsEnabled(true);
+  //     _betterPlayerController.setOverriddenAspectRatio(_currentAspectRatio);
+  //   });
+  // }
 
   void _setupPlayer() {
     BetterPlayerConfiguration betterPlayerConfiguration =
@@ -73,12 +73,12 @@ class _LiveTvPlayerState extends State<LiveTvPlayer> {
         loadingColor: Colors.white,
         playerTheme: BetterPlayerTheme.material,
         controlBarColor: Colors.transparent,
-        backgroundColor: Color.fromARGB(106, 0, 0, 0),
+        backgroundColor: const Color.fromARGB(106, 0, 0, 0),
         enableFullscreen: true,
         liveTextColor: Colors.transparent,
         enablePlayPause: true,
         controlBarHeight: 30,
-        loadingWidget: Center(
+        loadingWidget: const Center(
           child: CircularProgressIndicator(
             valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
           ),
