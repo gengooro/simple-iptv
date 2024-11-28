@@ -3,7 +3,7 @@ import 'package:iptv/database/xtream/streams/live.dart';
 import 'package:iptv/database/xtream/streams/series.dart';
 import 'package:iptv/database/xtream/streams/vod.dart';
 
-class RecentWatchedChannelsProvider with ChangeNotifier {
+class RecentWatchedProvider with ChangeNotifier {
   List<LiveStreamModel> _liveTv = [];
   List<VodStreamModel> _vod = [];
   List<SeriesStreamModel> _series = [];

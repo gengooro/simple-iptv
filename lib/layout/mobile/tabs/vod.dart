@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:iptv/controllers/metadata.dart';
+import 'package:iptv/data/constants.dart';
+import 'package:iptv/providers/metadata.dart';
 import 'package:iptv/database/xtream/category.dart';
 import 'package:iptv/database/xtream/streams/vod.dart';
+import 'package:iptv/widgets/gap.dart';
 import 'package:iptv/widgets/media_tab_base.dart';
+import 'package:iptv/widgets/my_list_tile.dart';
+import 'package:iptv/widgets/player/vod/page.dart';
 import 'package:iptv/widgets/search/vod.dart';
 import 'package:provider/provider.dart';
 
@@ -41,15 +45,30 @@ class _VodTabState extends State<VodTab> {
             builder: (context) => const VodSearch(searchTag: 'vod'),
           )),
       listBuilder: (context, filteredStreams) {
-        return GridView.builder(
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3,
-            childAspectRatio: 2 / 3,
-          ),
+        return ListView.separated(
+          separatorBuilder: (context, index) {
+            return VerticalGap(
+              height: Constants.gap,
+            );
+          },
           itemCount: filteredStreams.length,
           itemBuilder: (context, index) {
             final vod = filteredStreams[index] as VodStreamModel;
-            return Text(vod.name ?? "");
+
+            return MyListTile(
+              title: vod.name ?? "",
+              iconUrl: vod.streamIcon,
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => VodDetailsPage(
+                      stream: vod,
+                    ),
+                  ),
+                );
+              },
+            );
           },
         );
       },

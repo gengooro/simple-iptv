@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:iptv/controllers/metadata.dart';
+import 'package:iptv/data/constants.dart';
+import 'package:iptv/providers/metadata.dart';
 import 'package:iptv/database/xtream/category.dart';
 import 'package:iptv/database/xtream/streams/series.dart';
+import 'package:iptv/widgets/gap.dart';
 import 'package:iptv/widgets/media_tab_base.dart';
+import 'package:iptv/widgets/my_list_tile.dart';
+import 'package:iptv/widgets/player/series/page.dart';
 import 'package:iptv/widgets/search/series.dart';
 import 'package:provider/provider.dart';
 
@@ -22,12 +26,9 @@ class _SeriesTabState extends State<SeriesTab> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      metaDataProvider =
-          Provider.of<MetaDataProvider>(this.context, listen: false);
-      seriesCategories = metaDataProvider.getSeriesCategories();
-      seriesStreams = metaDataProvider.seriesStreams;
-    });
+    metaDataProvider = Provider.of<MetaDataProvider>(context, listen: false);
+    seriesCategories = metaDataProvider.getSeriesCategories();
+    seriesStreams = metaDataProvider.seriesStreams;
   }
 
   @override
@@ -43,15 +44,36 @@ class _SeriesTabState extends State<SeriesTab> {
         Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => const SeriesSearch(),
+              builder: (context) => const SeriesSearch(
+                searchTag: 'series',
+              ),
             ));
       },
       listBuilder: (context, filteredStreams) {
-        return ListView.builder(
+        return ListView.separated(
+          separatorBuilder: (context, index) {
+            return VerticalGap(
+              height: Constants.gap,
+            );
+          },
           itemCount: filteredStreams.length,
           itemBuilder: (context, index) {
             final series = filteredStreams[index] as SeriesStreamModel;
-            return Text(series.name ?? "");
+
+            return MyListTile(
+              title: series.name ?? "",
+              iconUrl: series.cover,
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => SeriesDetailsPage(
+                      series: series,
+                    ),
+                  ),
+                );
+              },
+            );
           },
         );
       },

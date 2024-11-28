@@ -1,0 +1,1 @@
+enum VideoFormat { hls, other }

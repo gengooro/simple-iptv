@@ -7,4 +7,6 @@ class Constants {
   static const boxAccountName = "AccountBox";
   static const boxCategoryName = "CategoryBox";
   static const boxStreamName = "StreamBox";
+
+  static const boxNewMetaDataName = "NewMetaDataBox";
 }

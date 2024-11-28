@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
-import 'package:iptv/controllers/selected_account.dart';
+import 'package:iptv/providers/selected_account.dart';
 import 'package:iptv/data/date_utils.dart';
-import 'package:iptv/controllers/accounts.dart';
+import 'package:iptv/providers/accounts.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:iptv/dialogs/account_delete_dialog.dart';
 import 'package:iptv/extension/theme.dart';
@@ -96,7 +96,7 @@ class _AccountListState extends State<AccountList> {
                       style: context.appTextTheme.bodyLarge,
                     ),
                     subtitle: Text(
-                      account.serverUrl ?? "No Server URL",
+                      account.username ?? "No Username",
                       style: context.appTextTheme.bodySmall,
                     ),
                     trailing: Text(

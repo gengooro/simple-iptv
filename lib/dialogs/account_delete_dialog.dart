@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:iptv/controllers/accounts.dart';
+import 'package:iptv/providers/accounts.dart';
 import 'package:provider/provider.dart';
 
 class AccountDeleteDialog extends StatelessWidget {

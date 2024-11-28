@@ -2,41 +2,58 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
-import 'package:iptv/controllers/selected_account.dart';
+import 'package:iptv/providers/selected_account.dart';
 import 'package:iptv/data/xtream.dart/categories.dart';
 import 'package:iptv/data/xtream.dart/streams.dart';
-import 'package:iptv/database/account.dart';
 import 'package:iptv/database/xtream/category.dart';
+import 'package:iptv/database/xtream/newmetadata.dart';
 import 'package:iptv/database/xtream/streams/live.dart';
 import 'package:iptv/database/xtream/streams/series.dart';
 import 'package:iptv/database/xtream/streams/vod.dart';
 import 'package:provider/provider.dart';
 
 class MetaDataProvider extends ChangeNotifier {
-  Account account = Account();
   bool _isFetching = false;
+  String _fetchingMessage = "";
+
+  late Box<CategoryModel> categoryBox;
+  late Box<LiveStreamModel> liveStreamBox;
+  late Box<VodStreamModel> vodStreamBox;
+  late Box<SeriesStreamModel> seriesStreamBox;
 
   List<CategoryModel> categories = [];
   List<LiveStreamModel> liveStreams = [];
   List<VodStreamModel> vodStreams = [];
   List<SeriesStreamModel> seriesStreams = [];
 
+  List<NewMetaData> newMetaData = [];
+
   bool get isFetching => _isFetching;
+  String get fetchingMessage => _fetchingMessage;
+
+  Future<void> initializeBoxes() async {
+    final selectedAccountProvider =
+        Provider.of<SelectedAccountProvider>(Get.context!, listen: false);
+    final account = selectedAccountProvider.account;
+
+    _fetchingMessage = "Getting things ready";
+    // Open all boxes before using them
+    categoryBox =
+        await Hive.openBox<CategoryModel>('categories_${account.username}');
+    liveStreamBox =
+        await Hive.openBox<LiveStreamModel>('live_${account.username}');
+    vodStreamBox =
+        await Hive.openBox<VodStreamModel>('vod_${account.username}');
+    seriesStreamBox =
+        await Hive.openBox<SeriesStreamModel>('series_${account.username}');
+  }
 
   Future<void> fetchAndStoreData() async {
     _isFetching = true;
     notifyListeners();
 
     try {
-      // Open the required Hive boxes
-      final categoryBox =
-          await Hive.openBox<CategoryModel>('categories_${account.name}');
-      final liveStreamBox =
-          await Hive.openBox<LiveStreamModel>('live_${account.name}');
-      final vodStreamBox =
-          await Hive.openBox<VodStreamModel>('vod_${account.name}');
-      final seriesStreamBox =
-          await Hive.openBox<SeriesStreamModel>('series_${account.name}');
+      await initializeBoxes();
 
       if (categoryBox.isEmpty ||
           liveStreamBox.isEmpty ||
@@ -45,25 +62,47 @@ class MetaDataProvider extends ChangeNotifier {
         debugPrint("Data missing in one or more boxes, fetching from API...");
 
         // Fetch data from API
-        debugPrint("Fetching live categories");
-        final liveCategoriesData = await fetchLiveCategoriesFromAPI();
-        debugPrint("Fetched live categories");
-        debugPrint("Fetching vod categories");
-        final vodCategoriesData = await fetchVodCategoriesFromAPI();
-        debugPrint("Fetched vod categories");
-        debugPrint("Fetching series categories");
-        final seriesCategoriesData = await fetchSeriesCategoriesFromAPI();
-        debugPrint("Fetched series categories");
+        _fetchingMessage = "Fetching live categories";
+        notifyListeners();
 
-        debugPrint("Fetching live streams");
+        final liveCategoriesData = await fetchLiveCategoriesFromAPI();
+        _fetchingMessage = "Fetched live categories";
+        notifyListeners();
+
+        _fetchingMessage = "Fetching vod categories";
+        notifyListeners();
+
+        final vodCategoriesData = await fetchVodCategoriesFromAPI();
+        _fetchingMessage = "Fetched vod categories";
+        notifyListeners();
+
+        _fetchingMessage = "Fetching series categories";
+        notifyListeners();
+
+        final seriesCategoriesData = await fetchSeriesCategoriesFromAPI();
+        _fetchingMessage = "Fetched series categories";
+        notifyListeners();
+
+        _fetchingMessage = "Fetching live streams";
+        notifyListeners();
+
         final liveStreamsData = await fetchLiveStreamsFromAPI();
-        debugPrint("Fetched live streams");
-        debugPrint("Fetching vod streams");
+        _fetchingMessage = "Fetched live streams";
+        notifyListeners();
+
+        _fetchingMessage = "Fetching vod streams";
+        notifyListeners();
+
         final vodStreamsData = await fetchVodStreamsFromAPI();
-        debugPrint("Fetched vod streams");
-        debugPrint("Fetching series streams");
+        _fetchingMessage = "Fetched vod streams";
+        notifyListeners();
+
+        _fetchingMessage = "Fetching series streams";
+        notifyListeners();
+
         final seriesStreamsData = await fetchSeriesStreamsFromAPI();
-        debugPrint("Fetched series streams");
+        _fetchingMessage = "Fetched series streams";
+        notifyListeners();
 
         // Combine category data
         List<CategoryModel> allCategories = [];
@@ -79,22 +118,18 @@ class MetaDataProvider extends ChangeNotifier {
         // Save the fetched data to Hive boxes
         if (categoryBox.isEmpty) {
           await categoryBox.addAll(allCategories);
-          debugPrint("Fetched and stored category data in Hive");
         }
 
         if (liveStreamBox.isEmpty) {
           await liveStreamBox.addAll(allLiveStreams);
-          debugPrint("Fetched and stored live stream data in Hive");
         }
 
         if (vodStreamBox.isEmpty) {
           await vodStreamBox.addAll(allVodStreams);
-          debugPrint("Fetched and stored VOD stream data in Hive");
         }
 
         if (seriesStreamBox.isEmpty) {
           await seriesStreamBox.addAll(allSeriesStreams);
-          debugPrint("Fetched and stored series stream data in Hive");
         }
 
         categories = allCategories;
@@ -125,8 +160,6 @@ class MetaDataProvider extends ChangeNotifier {
   Future<void> refetchMetadata() async {}
 
   List<CategoryModel> getCategoriesByType(String type) {
-    final categoryBox = Hive.box<CategoryModel>('categories_${account.name}');
-
     return categoryBox.values
         .where((category) => category.type == type)
         .toList();

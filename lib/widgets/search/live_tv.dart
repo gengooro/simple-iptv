@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:iptv/controllers/metadata.dart';
+import 'package:iptv/providers/metadata.dart';
 import 'package:iptv/data/constants.dart';
-import 'package:iptv/data/function.dart';
 import 'package:iptv/database/xtream/streams/live.dart';
 import 'package:iptv/extension/theme.dart';
-import 'package:iptv/provider/recent_searches.dart';
-import 'package:iptv/provider/search_items.dart';
+import 'package:iptv/providers/recent_searches.dart';
+import 'package:iptv/providers/search_items.dart';
 import 'package:iptv/widgets/gap.dart';
 import 'package:iptv/widgets/my_list_tile.dart';
-import 'package:iptv/widgets/player/live_tv_player.dart';
+import 'package:iptv/widgets/player/live/page.dart';
 import 'package:iptv/widgets/search.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -25,20 +24,20 @@ class _LiveTvSearchState extends State<LiveTvSearch> {
   final TextEditingController _searchController = TextEditingController();
   late final FocusNode focusNode;
   late MetaDataProvider metaDataProvider;
-  late RecentWatchedChannelsProvider recentWatchedChannelsProvider;
+  late RecentWatchedProvider recentWatchedProvider;
   List<LiveStreamModel> allStreams = [];
 
   String searchText = "";
 
   @override
   void initState() {
+    super.initState(); // Move super.initState() to the top
     focusNode = FocusNode();
-    super.initState();
 
+    // Remove the cast, just use context directly
     metaDataProvider = Provider.of<MetaDataProvider>(context, listen: false);
     allStreams = metaDataProvider.liveStreams;
 
-    // Add this delayed focus request
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
         Future.delayed(const Duration(milliseconds: 500), () {
@@ -107,12 +106,10 @@ class _LiveTvSearchState extends State<LiveTvSearch> {
               // Content area
               Expanded(
                 child: searchText == ""
-                    ? Consumer<RecentWatchedChannelsProvider>(
-                        builder:
-                            (context, recentWatchedChannelsProvider, child) {
-                          final liveStreams = recentWatchedChannelsProvider
-                              .liveTv.reversed
-                              .toList();
+                    ? Consumer<RecentWatchedProvider>(
+                        builder: (context, recentWatchedProvider, child) {
+                          final liveStreams =
+                              recentWatchedProvider.liveTv.reversed.toList();
                           return liveStreams.isEmpty
                               ? const SizedBox()
                               : Column(
@@ -123,14 +120,13 @@ class _LiveTvSearchState extends State<LiveTvSearch> {
                                           MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text(
-                                          "Recent channels",
+                                          "Recently viewed",
                                           style:
                                               context.appTextTheme.bodyMedium,
                                         ),
                                         TextButton(
                                           onPressed: () {
-                                            recentWatchedChannelsProvider
-                                                .clearLiveTv();
+                                            recentWatchedProvider.clearLiveTv();
                                           },
                                           child: Text(
                                             "Clear",
@@ -150,9 +146,9 @@ class _LiveTvSearchState extends State<LiveTvSearch> {
                                         itemBuilder: (context, index) {
                                           final stream = liveStreams[index];
                                           return Consumer<
-                                                  RecentWatchedChannelsProvider>(
+                                                  RecentWatchedProvider>(
                                               builder: (context,
-                                                  recentWatchedChannelsProvider,
+                                                  recentWatchedProvider,
                                                   child) {
                                             return MyListTile(
                                               title: stream.name ?? "",
@@ -162,10 +158,7 @@ class _LiveTvSearchState extends State<LiveTvSearch> {
                                                   context,
                                                   MaterialPageRoute(
                                                     builder: (context) =>
-                                                        LiveTvPlayer(
-                                                      url: Functions.getHLSUrl(
-                                                          context,
-                                                          stream.streamId),
+                                                        LiveDetailPage(
                                                       channel: stream,
                                                     ),
                                                   ),
@@ -192,14 +185,11 @@ class _LiveTvSearchState extends State<LiveTvSearch> {
                                   itemCount: liveStreams.length,
                                   itemBuilder: (context, index) {
                                     final liveStream = liveStreams[index];
-                                    final url = Functions.getHLSUrl(
-                                        context, liveStream.streamId);
+
                                     return RepaintBoundary(
-                                      child: Consumer<
-                                          RecentWatchedChannelsProvider>(
+                                      child: Consumer<RecentWatchedProvider>(
                                         builder: (context,
-                                            recentWatchedChannelsProvider,
-                                            child) {
+                                            recentWatchedProvider, child) {
                                           return MyListTile(
                                             title: liveStream.name ?? "",
                                             iconUrl: liveStream.streamIcon,
@@ -208,8 +198,7 @@ class _LiveTvSearchState extends State<LiveTvSearch> {
                                                 context,
                                                 MaterialPageRoute(
                                                   builder: (context) =>
-                                                      LiveTvPlayer(
-                                                    url: url,
+                                                      LiveDetailPage(
                                                     channel: liveStream,
                                                   ),
                                                 ),

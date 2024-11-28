@@ -40,7 +40,9 @@ class SearchTextfield extends StatelessWidget {
               controller?.value = TextEditingValue.empty;
               onChanged?.call("");
             },
-            child: const Icon(Icons.clear),
+            child: controller?.value == TextEditingValue.empty
+                ? const SizedBox()
+                : const Icon(Icons.clear),
           ),
         ),
       ),

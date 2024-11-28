@@ -146,7 +146,21 @@ class MyThemes {
   static ThemeData get darkTheme {
     return ThemeData(
       brightness: Brightness.dark,
-      colorSchemeSeed: Colors.deepOrange,
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: Colors.deepOrange,
+        brightness: Brightness.dark,
+      ),
+      textTheme: MyThemes.lightTheme.textTheme.apply(
+        bodyColor: Colors.white,
+        displayColor: Colors.white,
+      ),
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.r),
+          ),
+        ),
+      ),
       useMaterial3: true,
     );
   }

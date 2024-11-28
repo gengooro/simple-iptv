@@ -144,6 +144,6 @@ class SeriesStreamModel extends HiveObject {
 
   @override
   String toString() {
-    return 'Series{}';
+    return 'Series{num: $num, name: $name, seriesId: $seriesId, cover: $cover, plot: $plot, cast: $cast, director: $director, genre: $genre, releaseDate: $releaseDate, lastModified: $lastModified, rating: $rating, rating5based: $rating5based, backdropPath: $backdropPath, youtubeTrailer: $youtubeTrailer, tmdb: $tmdb, episodeRunTime: $episodeRunTime, categoryId: $categoryId}';
   }
 }

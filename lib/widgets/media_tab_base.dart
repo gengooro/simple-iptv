@@ -7,7 +7,7 @@ import 'package:iptv/widgets/category_tab.dart';
 import 'package:iptv/widgets/gap.dart';
 import 'package:iptv/widgets/search.dart';
 import 'package:provider/provider.dart';
-import 'package:iptv/controllers/category_tab.dart';
+import 'package:iptv/providers/category_tab.dart';
 
 class MediaTabBase extends StatelessWidget {
   final List<CategoryModel> categories;
@@ -99,7 +99,7 @@ class MediaTabBase extends StatelessWidget {
                     .toList();
 
                 if (filteredStreams.isEmpty) {
-                  return const Center(child: Text('No channels available'));
+                  return const Center(child: Text('No data'));
                 }
 
                 return listBuilder(context, filteredStreams);

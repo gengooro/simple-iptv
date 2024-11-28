@@ -4,7 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 // import 'package:http/http.dart' as http;
-import 'package:iptv/controllers/accounts.dart';
+import 'package:iptv/providers/accounts.dart';
 import 'package:iptv/database/account.dart';
 import 'package:iptv/extension/snackbar.dart';
 import 'package:iptv/extension/theme.dart';
@@ -50,7 +50,8 @@ class _AccountFormDialogState extends State<AccountFormDialog> {
             TextField(
               style: context.appTextTheme.bodyMedium,
               controller: _nameController,
-              decoration: const InputDecoration(hintText: 'Name', filled: true),
+              decoration:
+                  const InputDecoration(hintText: 'Label', filled: true),
               textInputAction: TextInputAction.next,
             ),
             VerticalGap(height: 10.h),
@@ -138,9 +139,11 @@ class _AccountFormDialogState extends State<AccountFormDialog> {
   }
 }
 
-Future<void> verifyXtream(XtreamForm data, BuildContext context) async {
+Future<void> verifyXtream(XtreamForm data, BuildContext _) async {
   // final AccountController accountService = Get.find();
-  final accountProvider = Provider.of<AccountProvider>(context, listen: false);
+  // final accountProvider = Provider.of<AccountProvider>(context, listen: false);
+  final accountProvider = _.read<AccountProvider>();
+
   final Dio dio = Dio();
   try {
     // Construct the URI
@@ -169,7 +172,10 @@ Future<void> verifyXtream(XtreamForm data, BuildContext context) async {
 
     // Validate user info
     if (response.userInfo == null) {
-      showSnackBar("Invalid Xtream Account");
+      showDialog(
+          context: _,
+          builder: (context) => const ErrorDialog(
+              title: 'Error', content: 'Invalid Xtream Account'));
       return;
     }
 
@@ -192,9 +198,14 @@ Future<void> verifyXtream(XtreamForm data, BuildContext context) async {
 
     // Show success message and close dialog/screen
     showSnackBar("Account added");
-    Navigator.pop(context);
+    Navigator.pop(_);
   } catch (e) {
     debugPrint("Error verifying Xtream account: $e");
-    showSnackBar("Invalid Xtream Account or Network Error");
+    showDialog(
+        context: _,
+        builder: (context) => const ErrorDialog(
+            title: 'Error',
+            content: 'Invalid Xtream Account or Network Error'));
+    // showSnackBar("Invalid Xtream Account or Network Error");
   }
 }

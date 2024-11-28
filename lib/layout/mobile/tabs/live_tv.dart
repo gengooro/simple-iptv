@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:iptv/controllers/metadata.dart';
-import 'package:iptv/controllers/selected_account.dart';
-import 'package:iptv/data/function.dart';
+import 'package:iptv/data/constants.dart';
+import 'package:iptv/providers/metadata.dart';
+import 'package:iptv/providers/selected_account.dart';
 import 'package:iptv/database/xtream/category.dart';
 import 'package:iptv/database/xtream/streams/live.dart';
 import 'package:iptv/widgets/gap.dart';
 import 'package:iptv/widgets/media_tab_base.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:iptv/widgets/my_list_tile.dart';
-import 'package:iptv/widgets/player/live_tv_player.dart'; // Keep only this import for LiveTvBetterPlayer
+import 'package:iptv/widgets/player/live/page.dart';
 import 'package:iptv/widgets/search/live_tv.dart';
 import 'package:provider/provider.dart';
 
@@ -56,7 +55,7 @@ class _LiveTvTabState extends State<LiveTvTab> {
           itemCount: filteredStreams.length,
           separatorBuilder: (context, index) {
             return VerticalGap(
-              height: 7.h,
+              height: Constants.gap,
             );
           },
           itemBuilder: (context, index) {
@@ -66,57 +65,18 @@ class _LiveTvTabState extends State<LiveTvTab> {
               title: channel.name ?? "",
               iconUrl: channel.streamIcon,
               onTap: () {
-                final url = Functions.getHLSUrl(context, channel.streamId ?? 0);
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) =>
-                        LiveTvPlayer(url: url, channel: channel),
+                    builder: (context) => LiveDetailPage(
+                      channel: channel,
+                    ),
                   ),
                 );
               },
             );
           },
         );
-        // return GridView.builder(
-        //   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        //     crossAxisCount: 4,
-        //     mainAxisSpacing: 5.sp,
-        //     crossAxisSpacing: 5.sp,
-        //   ),
-        //   itemCount: filteredStreams.length,
-        //   itemBuilder: (context, index) {
-        //     final channel = filteredStreams[index] as LiveStreamModel;
-        //     return GestureDetector(
-        //       onTap: () {
-        //         final url = Functions.getHLSUrl(context, channel.streamId ?? 0);
-        //         Navigator.push(
-        //           context,
-        //           MaterialPageRoute(
-        //             builder: (context) => LiveTvPlayer(url: url),
-        //           ),
-        //         );
-        //       },
-        //       child: Container(
-        //         padding: EdgeInsets.all(4.r),
-        //         decoration: BoxDecoration(
-        //           border: Border.all(
-        //             width: 1.r,
-        //           ),
-        //           borderRadius: BorderRadius.circular(4.r),
-        //         ),
-        //         child: GridTile(
-        //           child: channel.streamIcon?.isEmpty ?? true
-        //               ? Image.asset("assets/noimage.jpg")
-        //               : Image.network(
-        //                   channel.streamIcon ?? "",
-        //                   fit: BoxFit.fill,
-        //                 ),
-        //         ),
-        //       ),
-        //     );
-        //   },
-        // );
       },
     );
   }

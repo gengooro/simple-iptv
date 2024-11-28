@@ -99,6 +99,6 @@ class VodStreamModel extends HiveObject {
 
   @override
   String toString() {
-    return 'Vod{  }';
+    return 'Vod{num: $num, name: $name, streamId: $streamId, streamIcon: $streamIcon, rating: $rating, rating5based: $rating5based, tmdb: $tmdb, trailer: $trailer, added: $added, isAdult: $isAdult, categoryId: $categoryId}';
   }
 }
