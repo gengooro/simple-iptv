@@ -1,11 +1,10 @@
-import 'package:better_player/better_player.dart';
 import 'package:flutter/material.dart';
-import 'package:iptv/models/enums/index.dart';
 import 'package:iptv/providers/player_format.dart';
 import 'package:iptv/providers/selected_account.dart';
 import 'package:iptv/database/account.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher_string.dart';
+import 'package:video_player/video_player.dart';
 
 class Functions {
   static String cropText(String text, int length) {
@@ -45,16 +44,29 @@ class Functions {
     }
   }
 
-  static BetterPlayerVideoFormat getBetterPlayerFormat() {
+  // static BetterPlayerVideoFormat getBetterPlayerFormat() {
+  //   final format = getExtension();
+
+  //   switch (format) {
+  //     case "m3u8":
+  //       return BetterPlayerVideoFormat.hls;
+  //     case "ts":
+  //       return BetterPlayerVideoFormat.other;
+  //     default:
+  //       return BetterPlayerVideoFormat.hls; // Default value.
+  //   }
+  // }
+
+  static VideoFormat getVideoFormat() {
     final format = getExtension();
 
     switch (format) {
       case "m3u8":
-        return BetterPlayerVideoFormat.hls;
+        return VideoFormat.hls;
       case "ts":
-        return BetterPlayerVideoFormat.other;
+        return VideoFormat.other;
       default:
-        return BetterPlayerVideoFormat.hls; // Default value.
+        return VideoFormat.hls; // Default value.
     }
   }
 
@@ -82,9 +94,12 @@ class Functions {
     return url;
   }
 
-  static String getImdbImageUrl(String imageUrl) {
-    // https://image.tmdb.org/t/p/w1280_and_h720_bestv2/jGm7gRkDX4ZdxCk8vWneTPSUzNl.jpg
-    return "https://image.tmdb.org/t/p/w1280_and_h720_bestv2$imageUrl";
+  static String getImdbImageUrl(String imageId) {
+    return "https://image.tmdb.org/t/p/w1280_and_h720_bestv2$imageId";
+  }
+
+  static String replaceImageSize(String imageUrl) {
+    return imageUrl.replaceAll("w600_and_h900", "w1280_and_h720");
   }
 
   static void openUrl(String url, String title) async {

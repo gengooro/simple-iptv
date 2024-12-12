@@ -6,8 +6,8 @@ import 'package:iptv/database/xtream/streams/vod.dart';
 import 'package:iptv/widgets/gap.dart';
 import 'package:iptv/widgets/media_tab_base.dart';
 import 'package:iptv/widgets/my_list_tile.dart';
-import 'package:iptv/widgets/player/vod/page.dart';
-import 'package:iptv/widgets/search/vod.dart';
+import 'package:iptv/views/player/vod/page.dart';
+import 'package:iptv/views/search/vod.dart';
 import 'package:provider/provider.dart';
 
 class VodTab extends StatefulWidget {

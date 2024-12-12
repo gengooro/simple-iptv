@@ -68,6 +68,11 @@ class TmdbVod {
     data['vote_average'] = voteAverage;
     return data;
   }
+
+  @override
+  String toString() {
+    return 'TmdbVod{adult: $adult, backdropPath: $backdropPath, genres: $genres, imdbId: $imdbId, originalTitle: $originalTitle, overview: $overview, popularity: $popularity, releaseDate: $releaseDate, runtime: $runtime, status: $status, tagline: $tagline, title: $title, voteAverage: $voteAverage}';
+  }
 }
 
 class Genres {

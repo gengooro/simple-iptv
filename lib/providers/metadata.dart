@@ -14,7 +14,7 @@ import 'package:provider/provider.dart';
 
 class MetaDataProvider extends ChangeNotifier {
   bool _isFetching = false;
-  String _fetchingMessage = "";
+  String _fetchingMessage = "Initializing";
 
   late Box<CategoryModel> categoryBox;
   late Box<LiveStreamModel> liveStreamBox;
@@ -153,6 +153,7 @@ class MetaDataProvider extends ChangeNotifier {
       debugPrint("Error fetching metadata: $e");
     } finally {
       _isFetching = false;
+      _fetchingMessage = "";
       notifyListeners();
     }
   }

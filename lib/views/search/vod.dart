@@ -1,31 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:iptv/database/xtream/streams/vod.dart';
 import 'package:iptv/providers/metadata.dart';
 import 'package:iptv/data/constants.dart';
-import 'package:iptv/database/xtream/streams/live.dart';
 import 'package:iptv/extension/theme.dart';
 import 'package:iptv/providers/recent_searches.dart';
 import 'package:iptv/providers/search_items.dart';
 import 'package:iptv/widgets/gap.dart';
 import 'package:iptv/widgets/my_list_tile.dart';
-import 'package:iptv/widgets/player/live/page.dart';
+import 'package:iptv/views/player/vod/page.dart';
 import 'package:iptv/widgets/search.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class LiveTvSearch extends StatefulWidget {
+class VodSearch extends StatefulWidget {
   final String? searchTag;
-  const LiveTvSearch({super.key, this.searchTag});
+  const VodSearch({super.key, this.searchTag});
 
   @override
-  State<LiveTvSearch> createState() => _LiveTvSearchState();
+  State<VodSearch> createState() => _VodSearchState();
 }
 
-class _LiveTvSearchState extends State<LiveTvSearch> {
+class _VodSearchState extends State<VodSearch> {
   final TextEditingController _searchController = TextEditingController();
   late final FocusNode focusNode;
   late MetaDataProvider metaDataProvider;
   late RecentWatchedProvider recentWatchedProvider;
-  List<LiveStreamModel> allStreams = [];
+  List<VodStreamModel> allStreams = [];
 
   String searchText = "";
 
@@ -36,7 +36,7 @@ class _LiveTvSearchState extends State<LiveTvSearch> {
 
     // Remove the cast, just use context directly
     metaDataProvider = Provider.of<MetaDataProvider>(context, listen: false);
-    allStreams = metaDataProvider.liveStreams;
+    allStreams = metaDataProvider.vodStreams;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
@@ -94,9 +94,9 @@ class _LiveTvSearchState extends State<LiveTvSearch> {
                                     .contains(value.toLowerCase()) ??
                                 false)
                             .toList();
-                        searchItemsProvider.liveTvItems = streams;
+                        searchItemsProvider.vodItems = streams;
                       } else {
-                        searchItemsProvider.liveTvItems = [];
+                        searchItemsProvider.vodItems = [];
                       }
                     },
                   );
@@ -108,9 +108,9 @@ class _LiveTvSearchState extends State<LiveTvSearch> {
                 child: searchText == ""
                     ? Consumer<RecentWatchedProvider>(
                         builder: (context, recentWatchedProvider, child) {
-                          final liveStreams =
-                              recentWatchedProvider.liveTv.reversed.toList();
-                          return liveStreams.isEmpty
+                          final vodStreams =
+                              recentWatchedProvider.vod.reversed.toList();
+                          return vodStreams.isEmpty
                               ? const SizedBox()
                               : Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -126,7 +126,7 @@ class _LiveTvSearchState extends State<LiveTvSearch> {
                                         ),
                                         TextButton(
                                           onPressed: () {
-                                            recentWatchedProvider.clearLiveTv();
+                                            recentWatchedProvider.clearVod();
                                           },
                                           child: Text(
                                             "Clear",
@@ -142,9 +142,9 @@ class _LiveTvSearchState extends State<LiveTvSearch> {
                                         separatorBuilder: (context, index) {
                                           return VerticalGap(height: 7.h);
                                         },
-                                        itemCount: liveStreams.length,
+                                        itemCount: vodStreams.length,
                                         itemBuilder: (context, index) {
-                                          final stream = liveStreams[index];
+                                          final stream = vodStreams[index];
                                           return Consumer<
                                                   RecentWatchedProvider>(
                                               builder: (context,
@@ -158,8 +158,8 @@ class _LiveTvSearchState extends State<LiveTvSearch> {
                                                   context,
                                                   MaterialPageRoute(
                                                     builder: (context) =>
-                                                        LiveDetailPage(
-                                                      channel: stream,
+                                                        VodDetailsPage(
+                                                      stream: stream,
                                                     ),
                                                   ),
                                                 );
@@ -175,31 +175,31 @@ class _LiveTvSearchState extends State<LiveTvSearch> {
                       )
                     : Consumer<SearchItemsProvider>(
                         builder: (context, value, child) {
-                          final liveStreams = value.liveTvItems;
-                          return liveStreams.isEmpty
+                          final vodStreams = value.vodItems;
+                          return vodStreams.isEmpty
                               ? const Center(child: Text('Search something'))
                               : ListView.separated(
                                   separatorBuilder: (context, index) {
                                     return VerticalGap(height: 7.h);
                                   },
-                                  itemCount: liveStreams.length,
+                                  itemCount: vodStreams.length,
                                   itemBuilder: (context, index) {
-                                    final liveStream = liveStreams[index];
+                                    final vodStream = vodStreams[index];
 
                                     return RepaintBoundary(
                                       child: Consumer<RecentWatchedProvider>(
                                         builder: (context,
                                             recentWatchedProvider, child) {
                                           return MyListTile(
-                                            title: liveStream.name ?? "",
-                                            iconUrl: liveStream.streamIcon,
+                                            title: vodStream.name ?? "",
+                                            iconUrl: vodStream.streamIcon,
                                             onTap: () {
                                               Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
                                                   builder: (context) =>
-                                                      LiveDetailPage(
-                                                    channel: liveStream,
+                                                      VodDetailsPage(
+                                                    stream: vodStream,
                                                   ),
                                                 ),
                                               );

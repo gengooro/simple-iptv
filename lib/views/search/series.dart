@@ -7,7 +7,7 @@ import 'package:iptv/providers/recent_searches.dart';
 import 'package:iptv/providers/search_items.dart';
 import 'package:iptv/widgets/gap.dart';
 import 'package:iptv/widgets/my_list_tile.dart';
-import 'package:iptv/widgets/player/series/page.dart';
+import 'package:iptv/views/player/series/page.dart';
 import 'package:iptv/widgets/search.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

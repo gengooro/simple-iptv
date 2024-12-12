@@ -62,49 +62,50 @@ class _AccountListState extends State<AccountList> {
               padding: EdgeInsets.all(4.r),
               child: Consumer<SelectedAccountProvider>(
                 builder: (context, selectedAccountProvider, child) => ListTile(
-                    onLongPress: () {
-                      showDialog(
-                        context: context,
-                        builder: (context) =>
-                            AccountDeleteDialog(accountKey: key),
-                      );
-                    },
-                    onTap: () {
-                      selectedAccountProvider.setAccount(account);
-                      Get.to(() => const Dashboard());
-                    },
-                    tileColor: context.appColorScheme.surfaceContainer,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
+                  onLongPress: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) =>
+                          AccountDeleteDialog(accountKey: key),
+                    );
+                  },
+                  onTap: () {
+                    selectedAccountProvider.setAccount(account);
+                    Get.to(() => const Dashboard());
+                  },
+                  tileColor: context.appColorScheme.surfaceContainer,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  leading: Container(
+                    width: 24.w,
+                    height: 24.h,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: context.appColorScheme.secondary,
+                      shape: BoxShape.circle,
                     ),
-                    leading: Container(
-                      width: 24.w,
-                      height: 24.h,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        color: context.appColorScheme.secondary,
-                        shape: BoxShape.circle,
-                      ),
-                      child: Text(
-                        account.name?.substring(0, 1).toUpperCase() ?? '?',
-                        style: context.appTextTheme.labelLarge?.copyWith(
-                            color: context.appColorScheme.onSecondary),
-                      ),
+                    child: Text(
+                      account.name?.substring(0, 1).toUpperCase() ?? '?',
+                      style: context.appTextTheme.labelLarge
+                          ?.copyWith(color: context.appColorScheme.onSecondary),
                     ),
-                    title: Text(
-                      account.name ?? "No Name",
-                      style: context.appTextTheme.bodyLarge,
-                    ),
-                    subtitle: Text(
-                      account.username ?? "No Username",
-                      style: context.appTextTheme.bodySmall,
-                    ),
-                    trailing: Text(
-                      account.expiresAt != null
-                          ? "Expires in ${MyDateUtils.getDaysLeft(account.expiresAt!)} days"
-                          : "Expiration unknown",
-                      style: context.appTextTheme.labelMedium,
-                    )),
+                  ),
+                  title: Text(
+                    account.name ?? "No Name",
+                    style: context.appTextTheme.bodyLarge,
+                  ),
+                  subtitle: Text(
+                    account.username ?? "No Username",
+                    style: context.appTextTheme.bodySmall,
+                  ),
+                  trailing: Text(
+                    account.expiresAt != null
+                        ? MyDateUtils.getExpirationText(account.expiresAt!)
+                        : "Expiration unknown",
+                    style: context.appTextTheme.labelMedium,
+                  ),
+                ),
               ),
             );
           },

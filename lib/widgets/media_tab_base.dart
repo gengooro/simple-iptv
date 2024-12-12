@@ -33,6 +33,12 @@ class MediaTabBase extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final shuffledCategories = categories;
+    final shuffledStreams = streams;
+
+    shuffledCategories.shuffle();
+    shuffledStreams.shuffle();
+
     return Column(
       children: [
         Container(
@@ -52,16 +58,16 @@ class MediaTabBase extends StatelessWidget {
                 height: 50,
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
-                  itemCount: categories.length,
+                  itemCount: shuffledCategories.length,
                   itemBuilder: (context, index) {
-                    final categoryId = categories[index].categoryId;
+                    final categoryId = shuffledCategories[index].categoryId;
                     return Consumer<CategoryTabProvider>(
                       builder: (context, categoryTabProvider, child) {
                         WidgetsBinding.instance.addPostFrameCallback((_) {
                           if (getSelectedCategoryId(categoryTabProvider)
                               .isEmpty) {
                             setSelectedCategory(categoryTabProvider,
-                                categories[index].categoryId ?? "");
+                                shuffledCategories[index].categoryId ?? "");
                           }
                         });
 
@@ -69,12 +75,11 @@ class MediaTabBase extends StatelessWidget {
                             getSelectedCategoryId(categoryTabProvider);
 
                         return CategoryTab(
-                          key: ValueKey(categoryId),
                           onTap: () => setSelectedCategory(
                               categoryTabProvider, categoryId ?? ""),
                           categoryId: categoryId,
                           isSelected: isSelected,
-                          categories: categories,
+                          categories: shuffledCategories,
                           index: index,
                         );
                       },
@@ -92,7 +97,7 @@ class MediaTabBase extends StatelessWidget {
                 horizontal: Constants.padding, vertical: Constants.padding / 3),
             child: Consumer<CategoryTabProvider>(
               builder: (context, categoryTabProvider, child) {
-                final filteredStreams = streams
+                final filteredStreams = shuffledStreams
                     .where((stream) =>
                         getCategoryId(stream) ==
                         getSelectedCategoryId(categoryTabProvider))

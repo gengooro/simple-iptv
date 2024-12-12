@@ -6,8 +6,8 @@ import 'package:iptv/database/xtream/streams/series.dart';
 import 'package:iptv/widgets/gap.dart';
 import 'package:iptv/widgets/media_tab_base.dart';
 import 'package:iptv/widgets/my_list_tile.dart';
-import 'package:iptv/widgets/player/series/page.dart';
-import 'package:iptv/widgets/search/series.dart';
+import 'package:iptv/views/player/series/page.dart';
+import 'package:iptv/views/search/series.dart';
 import 'package:provider/provider.dart';
 
 class SeriesTab extends StatefulWidget {

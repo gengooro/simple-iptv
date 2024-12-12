@@ -32,7 +32,8 @@ class StreamData {
     }
   }
 
-  static Future<VodData?> getVod(String streamId, String tmdbId) async {
+  static Future<VodDataModel?> getVod(String streamId, String tmdbId) async {
+    debugPrint("Getting vod data for $streamId");
     final SelectedAccountProvider selectedAccountProvider =
         Provider.of(Get.context!, listen: false);
     final Account account = selectedAccountProvider.account;
@@ -40,29 +41,47 @@ class StreamData {
     Dio dio = Dio();
 
     try {
-      final movieDataResponse = await dio.get(
-          "${account.serverProtocol}://${account.serverUrl}/player_api.php?username=${account.username}&password=${account.password}&action=get_vod_info&vod_id=$streamId");
+      final vodDataUrl =
+          "${account.serverProtocol}://${account.serverUrl}/player_api.php?username=${account.username}&password=${account.password}&action=get_vod_info&vod_id=$streamId";
 
-      if (movieDataResponse.statusCode != 200) {
-        return null;
-      }
-
-      final movieData =
-          MovieData.fromJson(movieDataResponse.data["movie_data"]);
-
-      final imdbDataResponse = await dio.get(
-          "https://api.themoviedb.org/3/movie/$tmdbId?api_key=d7a8f9298ee33fadc48f6078581804c3");
-
-      if (imdbDataResponse.statusCode != 200) {
-        return null;
-      }
-
-      final imdbData = TmdbVod.fromJson(imdbDataResponse.data);
-
-      return VodData(
-        tmdbVod: imdbData,
-        movieData: movieData,
+      final vodDataResponse = await dio.get(
+        vodDataUrl,
       );
+
+      if (vodDataResponse.statusCode != 200) {
+        return null;
+      }
+
+      debugPrint("Vod Data Response is ${vodDataResponse.toString()}");
+
+      final vodData = VodDataServer.fromJson(vodDataResponse.data);
+
+      debugPrint("Vod Data is ${vodData.toString()}");
+
+      // if (vodData.info is Map) {
+      //   debugPrint("Info is a map");
+      //   if ((vodData.info as List).isNotEmpty) {
+      //     return VodDataModel(vodDataServer: vodData);
+      //   }
+      // }
+
+      if (tmdbId.isEmpty) {
+        return VodDataModel(vodDataServer: vodData);
+      }
+
+      final tmdbDataUrl = "https://tmdb-wrapper.vercel.app/movie/$tmdbId";
+
+      final tmdbDataResponse = await dio.get(
+        tmdbDataUrl,
+      );
+
+      if (tmdbDataResponse.statusCode != 200) {
+        return null;
+      }
+
+      final tmdbData = TmdbVod.fromJson(tmdbDataResponse.data);
+
+      return VodDataModel(tmdbVod: tmdbData, vodDataServer: vodData);
     } catch (e) {
       return null;
     }
@@ -71,12 +90,11 @@ class StreamData {
   static Future<TmdbVideos> getTmdbVideos(String tmdbId) async {
     final Dio dio = Dio();
     try {
-      final response = await dio.get(
-          "https://api.themoviedb.org/3/movie/$tmdbId/videos?api_key=d7a8f9298ee33fadc48f6078581804c3");
+      final response =
+          await dio.get("https://tmdb-wrapper.vercel.app/movie/$tmdbId/videos");
       return TmdbVideos.fromJson(response.data);
     } catch (e) {
       rethrow;
     }
-    // return "https://api.themoviedb.org/3/movie/$tmdbId/videos?api_key=d7a8f9298ee33fadc48f6078581804c3";
   }
 }

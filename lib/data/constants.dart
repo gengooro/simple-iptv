@@ -9,4 +9,6 @@ class Constants {
   static const boxStreamName = "StreamBox";
 
   static const boxNewMetaDataName = "NewMetaDataBox";
+  static const notAvailableString = "N/A";
+  static const notAvailableImage = "assets/noimage1280x720.png";
 }

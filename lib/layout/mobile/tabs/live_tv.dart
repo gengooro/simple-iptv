@@ -7,8 +7,8 @@ import 'package:iptv/database/xtream/streams/live.dart';
 import 'package:iptv/widgets/gap.dart';
 import 'package:iptv/widgets/media_tab_base.dart';
 import 'package:iptv/widgets/my_list_tile.dart';
-import 'package:iptv/widgets/player/live/page.dart';
-import 'package:iptv/widgets/search/live_tv.dart';
+import 'package:iptv/views/player/live/page.dart';
+import 'package:iptv/views/search/live_tv.dart';
 import 'package:provider/provider.dart';
 
 class LiveTvTab extends StatefulWidget {

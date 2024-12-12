@@ -1,8 +1,17 @@
 class MyDateUtils {
-  static int getDaysLeft(DateTime expiryDate) {
+  static String getExpirationText(DateTime expiryDate) {
     final now = DateTime.now();
     final difference = expiryDate.difference(now);
-    return difference.inDays;
+
+    if (difference.inDays > 0) {
+      return "Expires in ${difference.inDays} days";
+    } else if (difference.inSeconds > 0) {
+      final hours = difference.inHours;
+      final minutes = (difference.inMinutes % 60);
+      return "Expires in ${hours}h ${minutes}m";
+    } else {
+      return "Expired";
+    }
   }
 
   static DateTime unixTimeToDateTime(int unixTime) {
@@ -13,7 +22,8 @@ class MyDateUtils {
     return dateTime.millisecondsSinceEpoch ~/ 1000;
   }
 
-  static String minutesToTimeString(int minutes) {
+  static String? minutesToTimeString(int? minutes) {
+    if (minutes == null) return "Invalid input";
     if (minutes < 0) return "Invalid input";
 
     final int hours = minutes ~/ 60; // Get the number of hours

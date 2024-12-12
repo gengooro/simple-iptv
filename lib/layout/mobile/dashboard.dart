@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:iptv/data/constants.dart';
 import 'package:iptv/providers/bottom_navigation.dart';
 import 'package:iptv/providers/metadata.dart';
 import 'package:iptv/providers/selected_account.dart';
@@ -9,6 +10,7 @@ import 'package:iptv/layout/mobile/tabs/search.dart';
 import 'package:iptv/layout/mobile/tabs/series.dart';
 import 'package:iptv/layout/mobile/tabs/settings.dart';
 import 'package:iptv/layout/mobile/tabs/vod.dart';
+import 'package:iptv/widgets/gap.dart';
 import 'package:provider/provider.dart';
 
 class Dashboard extends StatefulWidget {
@@ -102,8 +104,15 @@ class _DashboardState extends State<Dashboard> {
           ],
         ),
         body: _initializing
-            ? const Center(
-                child: CircularProgressIndicator(),
+            ? Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const CircularProgressIndicator(),
+                    VerticalGap(height: Constants.gap / 2),
+                    Text(metaDataProvider.fetchingMessage),
+                  ],
+                ),
               )
             : Consumer<MetaDataProvider>(
                 builder: (context, metaDataProvider, child) {

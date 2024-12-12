@@ -7,8 +7,8 @@ import 'package:iptv/extension/theme.dart';
 import 'package:iptv/providers/metadata.dart';
 import 'package:iptv/widgets/gap.dart';
 import 'package:iptv/widgets/my_list_tile.dart';
-import 'package:iptv/widgets/player/player.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:iptv/widgets/flick_player/flick_player.dart';
 import 'package:provider/provider.dart';
 
 class LiveDetailPage extends StatelessWidget {
@@ -46,11 +46,22 @@ class LiveDetailPage extends StatelessWidget {
                   borderRadius: BorderRadius.circular(16.r),
                   shape: BoxShape.rectangle,
                 ),
-                child: PlayerWidget(
+                // child: ChewiePlayer(
+                //   url: url,
+                //   format: Functions.getVideoFormat(),
+                //   isLive: true,
+                // ),
+                child: FlickPlayer(
                   url: url,
-                  videoFormat: Functions.getBetterPlayerFormat(),
+                  videoFormat: Functions.getVideoFormat(),
                   isLive: true,
+                  autoPlay: true,
                 ),
+                // child: PlayerWidget(
+                //   url: url,
+                //   videoFormat: Functions.getBetterPlayerFormat(),
+                //   isLive: true,
+                // ),
               ),
               VerticalGap(
                 height: Constants.gap,

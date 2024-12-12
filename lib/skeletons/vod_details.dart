@@ -14,9 +14,9 @@ class VodDetailsSkeleton extends StatelessWidget {
     const isEnabled = true;
 
     return Scaffold(
-        body: SafeArea(
-      child: Padding(
-        padding: EdgeInsets.all(Constants.padding),
+        body: Padding(
+      padding: EdgeInsets.all(Constants.padding),
+      child: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -53,10 +53,7 @@ class VodDetailsSkeleton extends StatelessWidget {
             Skeletonizer(
               enabled: isEnabled,
               child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade200,
-                  borderRadius: BorderRadius.circular(8),
-                ),
+                color: Colors.grey.shade200,
                 width: double.infinity,
                 height: 75.h,
               ),
