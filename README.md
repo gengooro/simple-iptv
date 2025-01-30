@@ -7,7 +7,7 @@ Simple IPTV is an open-source Android application that enables users to connect 
 First, Clone this repository
 
 ```bash
-  git clone 
+  git clone https://github.com/gengooro/simple-iptv.git
 ```
 
 Install the packages
