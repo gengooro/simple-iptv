@@ -1,16 +1,21 @@
-# iptv
 
-A new Flutter project.
+# Simple Iptv  🍿
 
-## Getting Started
+Simple IPTV is an open-source Android application that enables users to connect their IPTV and Xtream API accounts, providing seamless content streaming. Designed with a sleek and modern Material 3 interface, it offers an intuitive and visually appealing user experience.
+## Deployment
 
-This project is a starting point for a Flutter application.
+First, Clone this repository
 
-A few resources to get you started if this is your first Flutter project:
+```bash
+  git clone 
+```
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+Install the packages
+```bash
+  dart run pub get
+```
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Build the Application (for android)
+```bash
+  flutter build apk --release
+```
